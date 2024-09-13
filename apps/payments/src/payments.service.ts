@@ -14,20 +14,12 @@ export class PaymentsService {
   constructor(private readonly configSerivce: ConfigService) {}
 
   async createCharge({ amount }: CreateChargeDto) {
-    // 테스트용 카드 정보를 사용해 PaymentMethod 생성
-    const paymentMethod = await this.stripe.paymentMethods.create({
-      type: 'card',
-      card: {
-        token: 'tok_visa', // 테스트용 토큰 사용
-      },
-    });
-
     const paymentIntent = await this.stripe.paymentIntents.create({
-      payment_method: paymentMethod.id,
+      payment_method: 'pm_card_visa',
       amount: amount * 100,
       confirm: true,
-      payment_method_types: ['card'],
       currency: 'usd',
+      return_url: 'http://localhost:3000',
     });
 
     return paymentIntent;
