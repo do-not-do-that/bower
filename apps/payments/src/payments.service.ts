@@ -13,10 +13,13 @@ export class PaymentsService {
   );
   constructor(private readonly configSerivce: ConfigService) {}
 
-  async createCharge({ card, amount }: CreateChargeDto) {
+  async createCharge({ amount }: CreateChargeDto) {
+    // 테스트용 카드 정보를 사용해 PaymentMethod 생성
     const paymentMethod = await this.stripe.paymentMethods.create({
       type: 'card',
-      card,
+      card: {
+        token: 'tok_visa', // 테스트용 토큰 사용
+      },
     });
 
     const paymentIntent = await this.stripe.paymentIntents.create({
